@@ -102,8 +102,8 @@ import net.shibboleth.utilities.java.support.xml.XMLParserException;
 public class SamlClient {
   private static final Logger logger = LoggerFactory.getLogger(SamlClient.class);
 
-  private static final String HTTP_REQ_SAML_PARAM = "SAMLRequest";
-  private static final String HTTP_RESP_SAML_PARAM = "SAMLResponse";
+  public static final String HTTP_REQ_SAML_PARAM = "SAMLRequest";
+  public static final String HTTP_RESP_SAML_PARAM = "SAMLResponse";
 
   private static boolean initializedOpenSaml = false;
   private BasicParserPool domParser;

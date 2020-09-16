@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/coveo/saml-client.svg?branch=master)](https://travis-ci.org/coveo/saml-client)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/coveo/saml-client/blob/master/LICENSE)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.coveo/saml-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.coveo/saml-client)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.coveo/saml-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.vnation/saml-client)
 
 # Dead Simple SAML 2.0 Client
 
@@ -18,9 +17,9 @@ Add this dependency to your `pom.xml` to reference the library:
 
 ```xml
     <dependency>
-      <groupId>com.coveo</groupId>
+      <groupId>com.github.vnation</groupId>
       <artifactId>saml-client</artifactId>
-      <version>3.0.2</version>
+      <version>0.0.1</version>
     </dependency>
 ```
 

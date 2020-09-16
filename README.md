@@ -19,7 +19,7 @@ Add this dependency to your `pom.xml` to reference the library:
     <dependency>
       <groupId>com.github.vnation</groupId>
       <artifactId>saml-client</artifactId>
-      <version>4.0.1</version>
+      <version>0.0.1</version>
     </dependency>
 ```
 

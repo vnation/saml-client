@@ -4,7 +4,7 @@
 
   <groupId>com.github.vnation</groupId>
   <artifactId>saml-client</artifactId>
-  <version>4.0.1</version>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>

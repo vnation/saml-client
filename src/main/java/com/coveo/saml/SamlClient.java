@@ -30,6 +30,9 @@ import java.util.zip.InflaterInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
@@ -99,9 +102,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 public class SamlClient {
   private static final Logger logger = LoggerFactory.getLogger(SamlClient.class);
@@ -157,10 +157,10 @@ public class SamlClient {
   /**
    * Sets by how much the current time can be before the assertion's notBefore.
    *
-   * Used to mitigate clock differences between the identity provider and relying party.
+   * <p>Used to mitigate clock differences between the identity provider and relying party.
    *
    * @param notBeforeSkew non-negative amount of skew (in milliseconds) to allow between the current
-   *        time and the assertion's notBefore date. Default: 0
+   *     time and the assertion's notBefore date. Default: 0
    */
   public void setNotBeforeSkew(long notBeforeSkew) {
     if (notBeforeSkew < 0) {
@@ -169,34 +169,27 @@ public class SamlClient {
     this.notBeforeSkew = notBeforeSkew;
   }
 
-  /**
-   *
-   * @return spSingleLogoutServiceUrl value
-   */
+  /** @return spSingleLogoutServiceUrl value */
   public String getSpSingleLogoutServiceUrl() {
     return spSingleLogoutServiceUrl;
   }
 
   /**
-   * @param spSingleLogoutServiceUrl the url where the identity provider will post back the
-   *        {@link LogoutRequest or LogoutResponse}
+   * @param spSingleLogoutServiceUrl the url where the identity provider will post back the {@link
+   *     LogoutRequest or LogoutResponse}
    */
   public void setSpSingleLogoutServiceUrl(String spSingleLogoutServiceUrl) {
     this.spSingleLogoutServiceUrl = spSingleLogoutServiceUrl;
   }
 
-  /**
-   *
-   * @return spSingleLogoutServiceBinding value
-   */
+  /** @return spSingleLogoutServiceBinding value */
   public SamlBinding getSpSingleLogoutServiceBinding() {
     return spSingleLogoutServiceBinding;
   }
 
   /**
-   *
    * @param spSingleLogoutServiceBinding sets the type of SAML binding service provider is using for
-   *        Single Logout. Default is set to SamlBinding.Redirect
+   *     Single Logout. Default is set to SamlBinding.Redirect
    */
   public void setSpSingleLogoutServiceBinding(SamlBinding spSingleLogoutServiceBinding) {
     this.spSingleLogoutServiceBinding = spSingleLogoutServiceBinding;
@@ -223,7 +216,7 @@ public class SamlClient {
    *
    * @param relyingPartyIdentifier the identifier of the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificates the list of base-64 encoded certificates to use to validate responses.
@@ -268,7 +261,7 @@ public class SamlClient {
    *
    * @param relyingPartyIdentifier the identifier of the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificates the list of base-64 encoded certificates to use to validate responses.
@@ -296,7 +289,7 @@ public class SamlClient {
    *
    * @param relyingPartyIdentifier the identifier of the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificate the base-64 encoded certificate to use to validate responses.
@@ -324,7 +317,6 @@ public class SamlClient {
    *
    * @param encodedResponse the encoded response returned by the identity provider.
    * @param method The HTTP method used by the request
-   *
    * @return An {@link SamlResponse} object containing information decoded from the SAML response.
    * @throws SamlException if the signature is invalid, or if any other error occurs.
    */
@@ -380,13 +372,14 @@ public class SamlClient {
 
   /**
    * Constructs an SAML client using XML metadata obtained from the identity provider.
-   * <p>
-   * When using Okta as an identity provider, it is possible to pass null to relyingPartyIdentifier
-   * and assertionConsumerServiceUrl; they will be inferred from the metadata provider XML.
+   *
+   * <p>When using Okta as an identity provider, it is possible to pass null to
+   * relyingPartyIdentifier and assertionConsumerServiceUrl; they will be inferred from the metadata
+   * provider XML.
    *
    * @param relyingPartyIdentifier the identifier for the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param metadata the XML metadata obtained from the identity provider.
    * @return The created {@link SamlClient}.
    * @throws SamlException thrown if any error occur while loading the metadata information.
@@ -400,13 +393,14 @@ public class SamlClient {
 
   /**
    * Constructs an SAML client using XML metadata obtained from the identity provider.
-   * <p>
-   * When using Okta as an identity provider, it is possible to pass null to relyingPartyIdentifier
-   * and assertionConsumerServiceUrl; they will be inferred from the metadata provider XML.
+   *
+   * <p>When using Okta as an identity provider, it is possible to pass null to
+   * relyingPartyIdentifier and assertionConsumerServiceUrl; they will be inferred from the metadata
+   * provider XML.
    *
    * @param relyingPartyIdentifier the identifier for the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param metadata the XML metadata obtained from the identity provider.
    * @param samlBinding the HTTP method to use for binding to the IdP.
    * @return The created {@link SamlClient}.
@@ -424,13 +418,14 @@ public class SamlClient {
 
   /**
    * Constructs an SAML client using XML metadata obtained from the identity provider.
-   * <p>
-   * When using Okta as an identity provider, it is possible to pass null to relyingPartyIdentifier
-   * and assertionConsumerServiceUrl; they will be inferred from the metadata provider XML.
+   *
+   * <p>When using Okta as an identity provider, it is possible to pass null to
+   * relyingPartyIdentifier and assertionConsumerServiceUrl; they will be inferred from the metadata
+   * provider XML.
    *
    * @param relyingPartyIdentifier the identifier for the relying party.
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
-   *        response.
+   *     response.
    * @param metadata the XML metadata obtained from the identity provider.
    * @param samlBinding the HTTP method to use for binding to the IdP.
    * @param certificates list of certificates.
@@ -540,7 +535,7 @@ public class SamlClient {
     }
   }
 
-  private synchronized static void ensureOpenSamlIsInitialized() throws SamlException {
+  private static synchronized void ensureOpenSamlIsInitialized() throws SamlException {
     if (!initializedOpenSaml) {
       try {
         InitializationService.initialize();
@@ -600,12 +595,10 @@ public class SamlClient {
 
   private static SingleSignOnService getIdpBinding(
       IDPSSODescriptor idpSsoDescriptor, SamlBinding samlBinding) throws SamlException {
-    return idpSsoDescriptor
-        .getSingleSignOnServices()
-        .stream()
+    return idpSsoDescriptor.getSingleSignOnServices().stream()
         .filter(
-            x
-                -> x.getBinding()
+            x ->
+                x.getBinding()
                     .equals("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-" + samlBinding.toString()))
         .findAny()
         .orElseThrow(() -> new SamlException("Cannot find HTTP-POST SSO binding in metadata"));
@@ -618,9 +611,7 @@ public class SamlClient {
 
     try {
       certificates =
-          idpSsoDescriptor
-              .getKeyDescriptors()
-              .stream()
+          idpSsoDescriptor.getKeyDescriptors().stream()
               .filter(x -> x.getUse() == UsageType.SIGNING)
               .flatMap(SamlClient::getDatasWithCertificates)
               .map(SamlClient::getFirstCertificate)
@@ -634,10 +625,7 @@ public class SamlClient {
   }
 
   private static Stream<X509Data> getDatasWithCertificates(KeyDescriptor descriptor) {
-    return descriptor
-        .getKeyInfo()
-        .getX509Datas()
-        .stream()
+    return descriptor.getKeyInfo().getX509Datas().stream()
         .filter(d -> d.getX509Certificates().size() > 0);
   }
 
@@ -699,7 +687,7 @@ public class SamlClient {
    * @param encodedRequest the encoded request send by the identity provider.
    * @param method The HTTP method used by the request
    * @return An {@link LogoutRequest} object containing information decoded from the SAML Logout
-   *         Request.
+   *     Request.
    * @throws SamlException if the signature is invalid, or if any other error occurs.
    */
   public LogoutRequest decodeSamlLogoutRequest(String encodedRequest, String method)
@@ -774,9 +762,7 @@ public class SamlClient {
     additionalSpCredentials.add(new BasicX509Credential(certificate, privateKey));
   }
 
-  /**
-   * Remove all additional service provider decryption certificate/key pairs.
-   */
+  /** Remove all additional service provider decryption certificate/key pairs. */
   public void clearAdditionalSPKeys() {
     additionalSpCredentials = new ArrayList<>();
   }
@@ -965,7 +951,7 @@ public class SamlClient {
    *
    * @param request the {@link HttpServletRequest}.
    * @return An {@link LogoutRequest} object containing information decoded from the SAML Logout
-   *         Request.
+   *     Request.
    * @throws SamlException thrown is an unexpected error occurs.
    */
   public LogoutRequest processLogoutRequestPostFromIdentityProvider(HttpServletRequest request)
@@ -1137,10 +1123,8 @@ public class SamlClient {
    * unset.
    *
    * @param samlObject The object to sign
-   *
-   * @throws SamlException if
-   *         {@link SignatureSupport#signObject(SignableXMLObject, SignatureSigningParameters)
-   *         signObject} fails
+   * @throws SamlException if {@link SignatureSupport#signObject(SignableXMLObject,
+   *     SignatureSigningParameters) signObject} fails
    */
   private void signSAMLObject(SignableSAMLObject samlObject) throws SamlException {
     if (spCredential != null) {

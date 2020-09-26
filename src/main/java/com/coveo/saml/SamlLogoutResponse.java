@@ -5,9 +5,7 @@ import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.saml.saml2.core.StatusDetail;
 import org.opensaml.saml.saml2.core.StatusMessage;
 
-/**
- * The type Saml logout response.
- */
+/** The type Saml logout response. */
 public class SamlLogoutResponse {
   private Status status;
 

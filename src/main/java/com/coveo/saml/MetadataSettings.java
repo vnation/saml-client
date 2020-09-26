@@ -1,5 +1,6 @@
 package com.coveo.saml;
 
+import com.coveo.saml.SamlClient.SamlBinding;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,15 +12,11 @@ import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nonnull;
-
 import org.opensaml.security.credential.Credential;
 import org.opensaml.security.x509.BasicX509Credential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.coveo.saml.SamlClient.SamlBinding;
 
 /**
  * Saml2Settings

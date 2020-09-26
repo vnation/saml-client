@@ -17,6 +17,8 @@
 
 package com.coveo.saml;
 
+import java.io.Writer;
+import java.util.Map;
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -26,14 +28,10 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.w3c.dom.ls.LSSerializerFilter;
 
-import java.io.Writer;
-
-import java.util.Map;
-
 public class XMLHelper {
   /**
-   * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content is encoded using
-   * the encoding specified in the writer configuration.
+   * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content
+   * is encoded using the encoding specified in the writer configuration.
    *
    * @param node the node to write out
    * @param output the writer to write the XML to
@@ -43,13 +41,13 @@ public class XMLHelper {
   }
 
   /**
-   * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content is encoded using
-   * the encoding specified in the writer configuration.
+   * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content
+   * is encoded using the encoding specified in the writer configuration.
    *
    * @param node the node to write out
    * @param output the writer to write the XML to
    * @param serializerParams parameters to pass to the {@link DOMConfiguration} of the serializer
-   *         instance, obtained via {@link LSSerializer#getDomConfig()}. May be null.
+   *     instance, obtained via {@link LSSerializer#getDomConfig()}. May be null.
    */
   public static void writeNode(Node node, Writer output, Map<String, Object> serializerParams) {
     DOMImplementationLS domImplLS = getLSDOMImpl(node);
@@ -63,19 +61,16 @@ public class XMLHelper {
   }
 
   /**
-   * Obtain a the DOM, level 3, Load/Save serializer {@link LSSerializer} instance from the
-   * given {@link DOMImplementationLS} instance.
+   * Obtain a the DOM, level 3, Load/Save serializer {@link LSSerializer} instance from the given
+   * {@link DOMImplementationLS} instance.
    *
-   * <p>
-   * The serializer instance will be configured with the parameters passed as the <code>serializerParams</code>
-   * argument. It will also be configured with an {@link LSSerializerFilter} that shows all nodes to the filter,
-   * and accepts all nodes shown.
-   * </p>
+   * <p>The serializer instance will be configured with the parameters passed as the <code>
+   * serializerParams</code> argument. It will also be configured with an {@link LSSerializerFilter}
+   * that shows all nodes to the filter, and accepts all nodes shown.
    *
    * @param domImplLS the DOM Level 3 Load/Save implementation to use
    * @param serializerParams parameters to pass to the {@link DOMConfiguration} of the serializer
-   *         instance, obtained via {@link LSSerializer#getDomConfig()}. May be null.
-   *
+   *     instance, obtained via {@link LSSerializer#getDomConfig()}. May be null.
    * @return a new LSSerializer instance
    */
   public static LSSerializer getLSSerializer(

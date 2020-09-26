@@ -1,15 +1,15 @@
 package com.coveo.saml;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class BrowserUtils {
   /**
    * Renders an HTTP response that will cause the browser to POST the specified values to an url.
+   *
    * @param url the url where to perform the POST.
    * @param response the {@link HttpServletResponse}.
    * @param values the values to include in the POST.

@@ -16,9 +16,7 @@ import org.opensaml.xmlsec.signature.Signature;
 import org.opensaml.xmlsec.signature.support.SignatureException;
 import org.opensaml.xmlsec.signature.support.SignatureValidator;
 
-/**
- * The type Validator utils.
- */
+/** The type Validator utils. */
 class ValidatorUtils {
 
   /**
@@ -182,8 +180,7 @@ class ValidatorUtils {
     }
 
     // It's fine if any of the credentials match the signature
-    return credentials
-        .stream()
+    return credentials.stream()
         .anyMatch(
             credential -> {
               try {

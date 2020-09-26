@@ -122,6 +122,7 @@ public class SamlClient {
   private String relyingPartyIdentifier;
   private String assertionConsumerServiceUrl;
   private String identityProviderUrl;
+  private String identityProviderLogoutUrl;
   private String responseIssuer;
   private List<Credential> credentials;
   private DateTime now; // used for testing only
@@ -211,6 +212,16 @@ public class SamlClient {
     this.wantAssertionsEncrypted = wantAssertionsEncrypted;
   }
 
+  /** @return the ideptityProviderLogoutUrl */
+  public String getIdeptityProviderLogoutUrl() {
+    return identityProviderLogoutUrl;
+  }
+
+  /** @param ideptityProviderLogoutUrl the ideptityProviderLogoutUrl to set */
+  public void setIdeptityProviderLogoutUrl(String ideptityProviderLogoutUrl) {
+    this.identityProviderLogoutUrl = ideptityProviderLogoutUrl;
+  }
+
   /**
    * Constructs an SAML client using explicit parameters.
    *
@@ -218,6 +229,7 @@ public class SamlClient {
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
    *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
+   * @param identityProviderLogoutUrl the url where the LogoutResponse will be submitted
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificates the list of base-64 encoded certificates to use to validate responses.
    * @param samlBinding what type of SAML binding should the client use.
@@ -227,6 +239,7 @@ public class SamlClient {
       String relyingPartyIdentifier,
       String assertionConsumerServiceUrl,
       String identityProviderUrl,
+      String identityProviderLogoutUrl,
       String responseIssuer,
       List<X509Certificate> certificates,
       SamlBinding samlBinding)
@@ -250,6 +263,7 @@ public class SamlClient {
     this.relyingPartyIdentifier = relyingPartyIdentifier;
     this.assertionConsumerServiceUrl = assertionConsumerServiceUrl;
     this.identityProviderUrl = identityProviderUrl;
+    this.identityProviderLogoutUrl = identityProviderLogoutUrl;
     this.responseIssuer = responseIssuer;
     credentials = certificates.stream().map(SamlClient::getCredential).collect(Collectors.toList());
     this.samlBinding = samlBinding;
@@ -263,6 +277,7 @@ public class SamlClient {
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
    *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
+   * @param identityProviderLogoutUrl the url where the LogoutResponse will be submitted
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificates the list of base-64 encoded certificates to use to validate responses.
    * @throws SamlException thrown if any error occur while loading the provider information.
@@ -271,6 +286,7 @@ public class SamlClient {
       String relyingPartyIdentifier,
       String assertionConsumerServiceUrl,
       String identityProviderUrl,
+      String identityProviderLogoutUrl,
       String responseIssuer,
       List<X509Certificate> certificates)
       throws SamlException {
@@ -279,6 +295,7 @@ public class SamlClient {
         relyingPartyIdentifier,
         assertionConsumerServiceUrl,
         identityProviderUrl,
+        identityProviderLogoutUrl,
         responseIssuer,
         certificates,
         SamlBinding.POST);
@@ -291,6 +308,7 @@ public class SamlClient {
    * @param assertionConsumerServiceUrl the url where the identity provider will post back the SAML
    *     response.
    * @param identityProviderUrl the url where the SAML request will be submitted.
+   * @param identityProviderLogoutUrl the url where the LogoutResponse will be submitted
    * @param responseIssuer the expected issuer ID for SAML responses.
    * @param certificate the base-64 encoded certificate to use to validate responses.
    * @throws SamlException thrown if any error occur while loading the provider information.
@@ -299,6 +317,7 @@ public class SamlClient {
       String relyingPartyIdentifier,
       String assertionConsumerServiceUrl,
       String identityProviderUrl,
+      String identityProviderLogoutUrl,
       String responseIssuer,
       X509Certificate certificate)
       throws SamlException {
@@ -307,6 +326,7 @@ public class SamlClient {
         relyingPartyIdentifier,
         assertionConsumerServiceUrl,
         identityProviderUrl,
+        identityProviderLogoutUrl,
         responseIssuer,
         Collections.singletonList(certificate),
         SamlBinding.POST);
@@ -491,6 +511,7 @@ public class SamlClient {
         relyingPartyIdentifier,
         assertionConsumerServiceUrl,
         identityProviderUrl,
+        null,
         responseIssuer,
         x509Certificates,
         samlBinding);
@@ -1008,7 +1029,11 @@ public class SamlClient {
       throws IOException, SamlException {
     Map<String, String> values = new HashMap<>();
     values.put(HTTP_RESP_SAML_PARAM, getSamlLogoutResponse(statusCode, statMsg));
-    BrowserUtils.postUsingBrowser(identityProviderUrl, response, values);
+    if (StringUtils.isNotBlank(identityProviderLogoutUrl)) {
+      BrowserUtils.postUsingBrowser(identityProviderLogoutUrl, response, values);
+    } else {
+      BrowserUtils.postUsingBrowser(identityProviderUrl, response, values);
+    }
   }
 
   private static XMLObject buildSamlObject(QName qname) {

@@ -508,7 +508,6 @@ public class SamlClientTest {
             .withSpSingleLogoutServiceUrl("http://example.com/logout")
             .build();
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
-    System.out.println(metadataXml);
   }
 
   @Test
@@ -527,7 +526,6 @@ public class SamlClientTest {
             .build();
 
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
-    System.out.println(metadataXml);
   }
 
   @Test
@@ -549,7 +547,6 @@ public class SamlClientTest {
             .build();
 
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
-    System.out.println(metadataXml);
   }
 
   private SamlClient getKeyCloakClient(boolean signingNewDocument)

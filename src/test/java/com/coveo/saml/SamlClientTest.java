@@ -520,9 +520,7 @@ public class SamlClientTest {
             .spSingleLogoutServiceUrl("http://example.com/logout")
             .authnRequestsSigned(false)
             .wantAssertionsEncrypted(true)
-            .spKeys(
-                this.getClass().getResource("saml-public-key.crt").getFile(),
-                this.getClass().getResource("saml-private-key.pk8").getFile())
+            .spX509cert(this.getClass().getResource("saml-public-key.crt").getFile())
             .build();
 
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
@@ -538,12 +536,8 @@ public class SamlClientTest {
             .spSingleLogoutServiceUrl("http://example.com/logout")
             .authnRequestsSigned(false)
             .wantAssertionsEncrypted(true)
-            .spKeys(
-                this.getClass().getResource("saml-public-key.crt").getFile(),
-                this.getClass().getResource("saml-private-key.pk8").getFile())
-            .additionalSPKey(
-                this.getClass().getResource("saml-alt-public-key.crt").getFile(),
-                this.getClass().getResource("saml-alt-private-key.pk8").getFile())
+            .spX509cert(this.getClass().getResource("saml-public-key.crt").getFile())
+            .additionalSpX509certs(this.getClass().getResource("saml-alt-public-key.crt").getFile())
             .build();
 
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);

@@ -1178,8 +1178,7 @@ public class SamlClient {
     }
   }
 
-  public static String generateSpMetadata(MetadataSettings metadataSettings)
-      throws MarshallingException, SamlException {
+  public static String generateSpMetadata(MetadataSettings metadataSettings) throws SamlException {
     ensureOpenSamlIsInitialized();
 
     EntityDescriptor spEntityDescriptor =
@@ -1199,13 +1198,13 @@ public class SamlClient {
     spSSODescriptor.setAuthnRequestsSigned(metadataSettings.getAuthnRequestsSigned());
     spSSODescriptor.setWantAssertionsSigned(metadataSettings.getWantAssertionsSigned());
 
-    if (metadataSettings.getSpCredential() != null) {
+    if (metadataSettings.getSpX509cert() != null) {
 
-      List<Credential> certs = new ArrayList<>();
-      certs.add(metadataSettings.getSpCredential());
-      certs.addAll(metadataSettings.getAdditionalSpCredentials());
+      List<X509Certificate> certs = new ArrayList<>();
+      certs.add(metadataSettings.getSpX509cert());
+      certs.addAll(metadataSettings.getAdditionalSpX509certs());
 
-      for (Credential cert : certs) {
+      for (X509Certificate cert : certs) {
         X509KeyInfoGeneratorFactory keyInfoGeneratorFactory = new X509KeyInfoGeneratorFactory();
         keyInfoGeneratorFactory.setEmitEntityCertificate(true);
         KeyInfoGenerator keyInfoGenerator = keyInfoGeneratorFactory.newInstance();
@@ -1219,7 +1218,7 @@ public class SamlClient {
         signKeyDescriptor.setUse(UsageType.SIGNING); // Set usage
 
         try {
-          signKeyDescriptor.setKeyInfo(keyInfoGenerator.generate(cert));
+          signKeyDescriptor.setKeyInfo(keyInfoGenerator.generate(new BasicX509Credential(cert)));
         } catch (SecurityException e) {
           logger.error("Error while creating credentials", e);
         }
@@ -1235,7 +1234,7 @@ public class SamlClient {
           encKeyDescriptor.setUse(UsageType.ENCRYPTION);
 
           try {
-            encKeyDescriptor.setKeyInfo(keyInfoGenerator.generate(cert));
+            encKeyDescriptor.setKeyInfo(keyInfoGenerator.generate(new BasicX509Credential(cert)));
           } catch (Exception e) {
             logger.error("Error while creating credentials", e);
           }
@@ -1277,7 +1276,12 @@ public class SamlClient {
     spSSODescriptor.addSupportedProtocol(SAMLConstants.SAML20P_NS);
     spEntityDescriptor.getRoleDescriptors().add(spSSODescriptor);
 
-    return marshallXmlObject(spEntityDescriptor).toString();
+    try {
+      String metadataXml = marshallXmlObject(spEntityDescriptor).toString();
+      return metadataXml;
+    } catch (Throwable ex) {
+      throw new SamlException("Error while initializing the Open SAML library", ex);
+    }
   }
 
   private static String getBindingString(SamlBinding samlBinding) throws SamlException {

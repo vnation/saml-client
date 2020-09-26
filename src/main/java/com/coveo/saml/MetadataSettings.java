@@ -1,9 +1,11 @@
 package com.coveo.saml;
 
 import com.coveo.saml.SamlClient.SamlBinding;
+import com.google.common.collect.Lists;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -13,8 +15,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.opensaml.security.credential.Credential;
-import org.opensaml.security.x509.BasicX509Credential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +70,9 @@ public class MetadataSettings {
   private String spSingleLogoutServiceUrl = null;
   private SamlBinding spSingleLogoutServiceBinding = SamlBinding.Redirect;
   private String spNameIDFormat = NAMEID_UNSPECIFIED;
-  private BasicX509Credential spCredential = null;
-  private List<Credential> additionalSpCredentials = new ArrayList<>();
+
+  private X509Certificate spX509cert = null;
+  private List<X509Certificate> additionalSpX509certs = Lists.newArrayList();
 
   // Security
   private boolean nameIdEncrypted = false;
@@ -109,8 +110,8 @@ public class MetadataSettings {
     this.spSingleLogoutServiceUrl = builder.spSingleLogoutServiceUrl;
     this.spSingleLogoutServiceBinding = builder.spSingleLogoutServiceBinding;
     this.spNameIDFormat = builder.spNameIDFormat;
-    this.spCredential = builder.spCredential;
-    this.additionalSpCredentials = builder.additionalSpCredentials;
+    this.spX509cert = builder.spX509cert;
+    this.additionalSpX509certs = builder.additionalSpX509certs;
     this.nameIdEncrypted = builder.nameIdEncrypted;
     this.authnRequestsSigned = builder.authnRequestsSigned;
     this.logoutRequestSigned = builder.logoutRequestSigned;
@@ -152,8 +153,8 @@ public class MetadataSettings {
     private String spSingleLogoutServiceUrl = null;
     private SamlBinding spSingleLogoutServiceBinding = SamlBinding.Redirect;
     private String spNameIDFormat = NAMEID_UNSPECIFIED;
-    private BasicX509Credential spCredential = null;
-    private List<Credential> additionalSpCredentials = new ArrayList<>();
+    private X509Certificate spX509cert = null;
+    private List<X509Certificate> additionalSpX509certs = Lists.newArrayList();
 
     // Security
     private boolean nameIdEncrypted = false;
@@ -475,28 +476,23 @@ public class MetadataSettings {
      * Set service provider keys.
      *
      * @param publicKey the public key
-     * @param privateKey the private key
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder spKeys(String publicKey, String privateKey) throws SamlException {
-      this.spCredential = generateBasicX509Credential(publicKey, privateKey);
+    public Builder spX509cert(String publicKey) throws SamlException {
+      this.spX509cert = loadCertificate(publicKey);
       return this;
     }
 
     /**
      * Set service provider keys.
      *
-     * @param certificate the certificate
-     * @param privateKey the private key
+     * @param publicKeyInputStream the public key
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder spKeys(X509Certificate certificate, PrivateKey privateKey) throws SamlException {
-      if (certificate == null || privateKey == null) {
-        throw new SamlException("No credentials provided");
-      }
-      spCredential = new BasicX509Credential(certificate, privateKey);
+    public Builder spX509cert(InputStream publicKeyInputStream) throws SamlException {
+      this.spX509cert = loadCertificate(publicKeyInputStream);
       return this;
     }
 
@@ -504,26 +500,23 @@ public class MetadataSettings {
      * Add an additional service provider certificate/key pair for decryption.
      *
      * @param publicKey the public key
-     * @param privateKey the private key
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder additionalSPKey(String publicKey, String privateKey) throws SamlException {
-      additionalSpCredentials.add(generateBasicX509Credential(publicKey, privateKey));
+    public Builder additionalSpX509certs(String publicKey) throws SamlException {
+      additionalSpX509certs.add(loadCertificate(publicKey));
       return this;
     }
 
     /**
      * Add an additional service provider certificate/key pair for decryption.
      *
-     * @param certificate the certificate
-     * @param privateKey the private key
+     * @param publicKeyInputStream of the publicKey file
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder additionalSPKey(X509Certificate certificate, PrivateKey privateKey)
-        throws SamlException {
-      additionalSpCredentials.add(new BasicX509Credential(certificate, privateKey));
+    public Builder additionalSpX509certs(InputStream publicKeyInputStream) throws SamlException {
+      additionalSpX509certs.add(loadCertificate(publicKeyInputStream));
       return this;
     }
 
@@ -533,7 +526,7 @@ public class MetadataSettings {
      * @return builder
      */
     public Builder clearAdditionalSPKeys() {
-      additionalSpCredentials = new ArrayList<>();
+      additionalSpX509certs = new ArrayList<>();
       return this;
     }
 
@@ -677,26 +670,14 @@ public class MetadataSettings {
     return compressResponse;
   }
 
-  /** @return the spCredential */
-  public BasicX509Credential getSpCredential() {
-    return spCredential;
+  /** @return the spX509cert */
+  public X509Certificate getSpX509cert() {
+    return spX509cert;
   }
 
-  /**
-   * generate an X509Credential from the provided key and cert.
-   *
-   * @param publicKey the public key
-   * @param privateKey the private key
-   * @throws SamlException if publicKey and privateKey don't form a valid credential
-   */
-  private static BasicX509Credential generateBasicX509Credential(
-      String publicKey, String privateKey) throws SamlException {
-    if (publicKey == null || privateKey == null) {
-      throw new SamlException("No credentials provided");
-    }
-    PrivateKey pk = loadPrivateKey(privateKey);
-    X509Certificate cert = loadCertificate(publicKey);
-    return new BasicX509Credential(cert, pk);
+  /** @return the additionalSpX509certs */
+  public List<X509Certificate> getAdditionalSpX509certs() {
+    return additionalSpX509certs;
   }
 
   /**
@@ -720,11 +701,31 @@ public class MetadataSettings {
   }
 
   /**
+   * Load an X.509 certificate
+   *
+   * @param is - InputStream of the file
+   * @return {@link X509Certificate} X509 certificate
+   */
+  public static X509Certificate loadCertificate(InputStream is) throws SamlException {
+    try {
+
+      CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+      return (X509Certificate) cf.generateCertificate(is);
+
+    } catch (Exception e) {
+      throw new SamlException("Couldn't load public key", e);
+    }
+  }
+
+  /**
    * Load a PKCS8 key
    *
    * @param filename The path of the key
+   * @return {@link PrivateKey}
+   * @throws SamlException the saml exception
    */
-  private static PrivateKey loadPrivateKey(String filename) throws SamlException {
+  public static PrivateKey loadPrivateKey(String filename) throws SamlException {
     try (RandomAccessFile raf = new RandomAccessFile(filename, "r")) {
       byte[] buf = new byte[(int) raf.length()];
       raf.readFully(buf);
@@ -740,8 +741,28 @@ public class MetadataSettings {
     }
   }
 
-  /** @return the additionalSpCredentials */
-  public List<Credential> getAdditionalSpCredentials() {
-    return additionalSpCredentials;
+  /**
+   * Load a PKCS8 key
+   *
+   * @param is - the inputStream of the privateKey certificate
+   * @return {@link PrivateKey}
+   * @throws SamlException the saml exception
+   */
+  public static PrivateKey loadPrivateKey(InputStream is) throws SamlException {
+    try {
+
+      byte[] buf = new byte[is.available()];
+      is.read(buf);
+
+      PKCS8EncodedKeySpec kspec = new PKCS8EncodedKeySpec(buf);
+      KeyFactory kf = KeyFactory.getInstance("RSA");
+
+      return kf.generatePrivate(kspec);
+
+    } catch (FileNotFoundException e) {
+      throw new SamlException("Private key file doesn't exist", e);
+    } catch (Exception e) {
+      throw new SamlException("Couldn't load private key", e);
+    }
   }
 }

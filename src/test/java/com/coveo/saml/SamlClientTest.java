@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -14,8 +13,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collections;
-
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -53,19 +50,19 @@ public class SamlClientTest {
   @Test
   public void metadataXMLFromADFSCanBeLoaded() throws Throwable {
     SamlClient.fromMetadata(
-        "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+        "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
   }
 
   @Test
   public void metadataXMLFromOktaCanBeLoaded() throws Throwable {
     SamlClient.fromMetadata(
-        "myidentifier", "http://some/url", getXml("okta.xml"), SamlClient.SamlIdpBinding.POST);
+        "myidentifier", "http://some/url", getXml("okta.xml"), SamlClient.SamlBinding.POST);
   }
 
   @Test
   public void metadataXMLFromAzureCanBeLoaded() throws Throwable {
     SamlClient.fromMetadata(
-        "myidentifier", "http://some/url", getXml("azure.xml"), SamlClient.SamlIdpBinding.POST);
+        "myidentifier", "http://some/url", getXml("azure.xml"), SamlClient.SamlBinding.POST);
   }
 
   @Test
@@ -74,7 +71,7 @@ public class SamlClientTest {
         "myidentifier",
         "http://some/url",
         getXml("azure-utf-16.xml", StandardCharsets.UTF_16),
-        SamlClient.SamlIdpBinding.POST);
+        SamlClient.SamlBinding.POST);
   }
 
   @Test
@@ -88,27 +85,27 @@ public class SamlClientTest {
         "myidentifier",
         "http://some/url",
         getXml("hub.xml"),
-        SamlClient.SamlIdpBinding.POST,
+        SamlClient.SamlBinding.POST,
         certificates);
   }
 
   @Test
   public void metadataXMLFromPingFederateCanBeLoaded() throws Throwable {
     SamlClient.fromMetadata(
-        "myidentifier", "http://some/url", getXml("ping.xml"), SamlClient.SamlIdpBinding.POST);
+        "myidentifier", "http://some/url", getXml("ping.xml"), SamlClient.SamlBinding.POST);
   }
 
   @Test
   public void relyingPartyIdentifierAndAssertionConsumerServiceUrlCanBeOmittedForOkta()
       throws Throwable {
-    SamlClient.fromMetadata(null, null, getXml("okta.xml"), SamlClient.SamlIdpBinding.POST);
+    SamlClient.fromMetadata(null, null, getXml("okta.xml"), SamlClient.SamlBinding.POST);
   }
 
   @Test
   public void getSamlRequestReturnsAnEncodedRequest() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     String decoded =
         new String(Base64.decodeBase64(client.getSamlRequest()), StandardCharsets.UTF_8);
     assertTrue(decoded.contains(">myidentifier<"));
@@ -118,7 +115,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlResponseCanDecodeAnSamlResponse() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     SamlResponse response = client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE, "POST");
     assertEquals("mlaporte@coveo.com", response.getNameID());
@@ -128,7 +125,7 @@ public class SamlClientTest {
   public void decodeAndValidateEnforceResponseOrAssertionSignature() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE_WITHOUT_SIGNATURE, "POST");
   }
@@ -137,7 +134,7 @@ public class SamlClientTest {
   public void decodeAndValidateWithAnInvalidResponseSignature() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     client.decodeAndValidateSamlResponse(
         AN_ENCODED_RESPONSE_WITH_INVALID_RESPONSE_SIGNATURE, "POST");
@@ -147,7 +144,7 @@ public class SamlClientTest {
   public void decodeAndValidateWithAnInvalidAssertionSignature() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     client.decodeAndValidateSamlResponse(
         AN_ENCODED_RESPONSE_WITH_INVALID_ASSERTION_SIGNATURE, "POST");
@@ -159,7 +156,7 @@ public class SamlClientTest {
     String tampered = decoded.replace("mlaporte", "evilperson");
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     client.decodeAndValidateSamlResponse(
         Base64.encodeBase64String(tampered.getBytes(StandardCharsets.UTF_8)), "POST");
@@ -169,7 +166,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlResponseWorksWithCertsInDifferentOrder() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs2.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs2.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     SamlResponse response = client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE, "POST");
     assertEquals("mlaporte@coveo.com", response.getNameID());
@@ -187,7 +184,7 @@ public class SamlClientTest {
             "myidentifier",
             "http://some/url",
             getXml("hub.xml"),
-            SamlClient.SamlIdpBinding.POST,
+            SamlClient.SamlBinding.POST,
             certificates);
     client.setDateTimeNow(ASSERTION_DATE_HUB);
     SamlResponse response = client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE_HUB, "POST");
@@ -198,10 +195,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlResponseWithHttpRedirect() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier",
-            "http://some/url",
-            getXml("adfs.xml"),
-            SamlClient.SamlIdpBinding.Redirect);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.Redirect);
     String decoded =
         new String(Base64.decodeBase64(client.getSamlRequest()), StandardCharsets.UTF_8);
     assertTrue(decoded.contains(">myidentifier<"));
@@ -214,7 +208,7 @@ public class SamlClientTest {
     String tampered = decoded.replace("mlaporte", "m<!---->laporte");
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     SamlResponse response =
         client.decodeAndValidateSamlResponse(
@@ -229,7 +223,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlResponseWorksWithNowAfterSkewedNotBefore() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     int skew = 60 * 60 * 1000;
     client.setDateTimeNow(ASSERTION_DATE.minus(skew));
     client.setNotBeforeSkew(skew);
@@ -241,7 +235,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlResponseRejectsNowBeforeNotBefore() throws Throwable {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     int skew = 60 * 60 * 1000;
     client.setDateTimeNow(ASSERTION_DATE.minus(skew));
     SamlResponse response = client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE, "POST");
@@ -260,33 +254,35 @@ public class SamlClientTest {
   }
 
   @Test
-  public void decodeAndValidateSamlResponseWithEncryptedSignedAssertionWithAlternateKeys() throws Throwable {
+  public void decodeAndValidateSamlResponseWithEncryptedSignedAssertionWithAlternateKeys()
+      throws Throwable {
     SamlClient client = getKeyCloakClient(false);
     client.setDateTimeNow(ASSERTION_DATE);
 
     client.setSPKeys(
-      this.getClass().getResource("saml-alt-public-key.crt").getFile(),
-      this.getClass().getResource("saml-alt-private-key.pk8").getFile());
+        this.getClass().getResource("saml-alt-public-key.crt").getFile(),
+        this.getClass().getResource("saml-alt-private-key.pk8").getFile());
 
     client.addAdditionalSPKey(
-      this.getClass().getResource("saml-public-key.crt").getFile(),
-      this.getClass().getResource("saml-private-key.pk8").getFile()
-    );
+        this.getClass().getResource("saml-public-key.crt").getFile(),
+        this.getClass().getResource("saml-private-key.pk8").getFile());
 
     SamlResponse response =
-            client.decodeAndValidateSamlResponse(AN_ENCODED_RESPONSE_WITH_SIGNED_AND_ENCRYPTED_ASSERTION, "POST");
+        client.decodeAndValidateSamlResponse(
+            AN_ENCODED_RESPONSE_WITH_SIGNED_AND_ENCRYPTED_ASSERTION, "POST");
 
     assertEquals("mlaporte@coveo.com", response.getNameID());
   }
 
-  // Test for https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
+  // Test for
+  // https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
   @Test
   public void itIsNotVulnerableToXXEAttacks() throws Throwable {
     String decoded = new String(Base64.decodeBase64(AN_ENCODED_RESPONSE), StandardCharsets.UTF_8);
     String withDtd = "<!DOCTYPE note SYSTEM \"Note.dtd\">" + decoded;
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("adfs.xml"), SamlClient.SamlBinding.POST);
     client.setDateTimeNow(ASSERTION_DATE);
     try {
       client.decodeAndValidateSamlResponse(
@@ -296,6 +292,7 @@ public class SamlClientTest {
       assertTrue(ex.getCause().getCause().toString().contains("DOCTYPE is disallowed"));
     }
   }
+
   /**
    * Decode and validate saml logout invalid response.
    *
@@ -303,9 +300,9 @@ public class SamlClientTest {
    */
   @Test
   public void decodeAndValidateSamlLogoutInvalidResponse() throws Throwable {
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(false);
-    //Retrieve the new encoded logout response with error status
+    // Retrieve the new encoded logout response with error status
     String encodedLogoutResponse = client.getSamlLogoutResponse(StatusCode.NO_AVAILABLE_IDP);
     SamlLogoutResponse logoutResponse =
         decodeAndValidateSamlLogoutResponse(encodedLogoutResponse, "POST");
@@ -321,7 +318,7 @@ public class SamlClientTest {
   public void decodeAndValidateSamlLogoutResponseWithInvalidSignature() throws Throwable {
     SamlClient client = getKeyCloakClient(true);
     String encodedSamlLogoutResponse = client.getSamlLogoutResponse(StatusCode.SUCCESS);
-    //Corrupt the signature  (decode => corrupt => encode)
+    // Corrupt the signature (decode => corrupt => encode)
     String decodedSamlLogoutResponse = decode(encodedSamlLogoutResponse);
     int index = decodedSamlLogoutResponse.indexOf("<ds:SignatureValue>") + 19;
     String s = decodedSamlLogoutResponse.substring(index);
@@ -344,14 +341,14 @@ public class SamlClientTest {
     /*
      * To avoid annoying code test, the IDP and the SP have the same public key
      */
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(true);
-    //Retrieve the new encoded logout response
+    // Retrieve the new encoded logout response
     String encodedLogoutResponse = client.getSamlLogoutResponse(StatusCode.SUCCESS);
-    //Decode the encoded logout response to check it is signed
+    // Decode the encoded logout response to check it is signed
     String decodedResponse = decode(encodedLogoutResponse);
     assertTrue(decodedResponse.contains(Signature.DEFAULT_ELEMENT_LOCAL_NAME));
-    //Decode and valid the logout response
+    // Decode and valid the logout response
     SamlLogoutResponse logoutResponse =
         decodeAndValidateSamlLogoutResponse(encodedLogoutResponse, "POST");
     assertTrue(logoutResponse.isValid());
@@ -365,9 +362,9 @@ public class SamlClientTest {
   @Test
   public void decodeAndValidateSamlLogoutRequest() throws Throwable {
     String nameId = "gdeclerck";
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(false);
-    //Create a logout request
+    // Create a logout request
     String encodedLogoutRequest = client.getLogoutRequest(nameId);
     client.decodeAndValidateSamlLogoutRequest(encodedLogoutRequest, nameId, "POST");
   }
@@ -380,9 +377,9 @@ public class SamlClientTest {
   @Test
   public void decodeAndValidateSamlLogoutRequestInvalidNameID() throws Throwable {
     String nameId = "gdeclerck";
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(false);
-    //Create a logout request
+    // Create a logout request
     String encodedLogoutRequest = client.getLogoutRequest(nameId);
     try {
       client.decodeAndValidateSamlLogoutRequest(encodedLogoutRequest, nameId + "XX", "POST");
@@ -399,12 +396,12 @@ public class SamlClientTest {
   @Test
   public void decodeAndValidateSamlLogoutRequestWithInvalidSignature() throws Throwable {
     String nameId = "gdeclerck";
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(true);
 
-    //Create a logout request
+    // Create a logout request
     String encodedLogoutRequest = client.getLogoutRequest(nameId);
-    //Invalid the signature
+    // Invalid the signature
     encodedLogoutRequest = getCorruptedSignature(encodedLogoutRequest);
     try {
       client.decodeAndValidateSamlLogoutRequest(encodedLogoutRequest, nameId, "POST");
@@ -421,12 +418,13 @@ public class SamlClientTest {
   @Test
   public void decodeAndValidateSamlLogoutRequestWithValidSignature() throws Throwable {
     String nameId = "gdeclerck";
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(true);
-    //Create a logout request
+    // Create a logout request
     String encodedLogoutRequest = client.getLogoutRequest(nameId);
     client.decodeAndValidateSamlLogoutRequest(encodedLogoutRequest, nameId, "POST");
   }
+
   /**
    * Decode and validate saml logout valid response.
    *
@@ -434,9 +432,9 @@ public class SamlClientTest {
    */
   @Test
   public void decodeAndValidateSamlLogoutValidResponse() throws Throwable {
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(false);
-    //Retrieve the new encoded logout response with valid status
+    // Retrieve the new encoded logout response with valid status
     String encodedLogoutResponse = client.getSamlLogoutResponse(StatusCode.SUCCESS);
     SamlLogoutResponse logoutResponse =
         decodeAndValidateSamlLogoutResponse(encodedLogoutResponse, "POST");
@@ -457,9 +455,9 @@ public class SamlClientTest {
    */
   @Test
   public void decodeAndValidateSamlLogoutValidResponseWithSignature() throws Throwable {
-    //Retrieve the saml client
+    // Retrieve the saml client
     SamlClient client = getKeyCloakClient(true);
-    //Retrieve the new encoded logout response with valid status
+    // Retrieve the new encoded logout response with valid status
     String encodedLogoutResponse = client.getSamlLogoutResponse(StatusCode.SUCCESS);
     SamlLogoutResponse logoutResponse =
         decodeAndValidateSamlLogoutResponse(encodedLogoutResponse, "POST");
@@ -499,14 +497,65 @@ public class SamlClientTest {
     assertTrue(decoded.contains(StatusCode.SUCCESS));
   }
 
+  @Test
+  public void generateMetadata_withoutSingedAndEcryption() throws Throwable {
+
+    MetadataSettings metadataSettings =
+        MetadataSettings.builder()
+            .withSpEntityId("testsp-entity-id")
+            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
+            .withSpSingleLogoutServiceUrl("http://example.com/logout")
+            .build();
+    String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
+    System.out.println(metadataXml);
+  }
+
+  @Test
+  public void generateMetadataWithEncrytpion() throws Throwable {
+
+    MetadataSettings metadataSettings =
+        MetadataSettings.builder()
+            .withSpEntityId("testsp-entity-id")
+            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
+            .withSpSingleLogoutServiceUrl("http://example.com/logout")
+            .withAuthnRequestsSigned(false)
+            .withWantAssertionsEncrypted(true)
+            .withSPKeys(
+                this.getClass().getResource("saml-public-key.crt").getFile(),
+                this.getClass().getResource("saml-private-key.pk8").getFile())
+            .build();
+
+    String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
+    System.out.println(metadataXml);
+  }
+
+  @Test
+  public void generateMetadataWithAdditionCerts() throws Throwable {
+
+    MetadataSettings metadataSettings =
+        MetadataSettings.builder()
+            .withSpEntityId("testsp-entity-id")
+            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
+            .withSpSingleLogoutServiceUrl("http://example.com/logout")
+            .withAuthnRequestsSigned(false)
+            .withWantAssertionsEncrypted(true)
+            .withSPKeys(
+                this.getClass().getResource("saml-public-key.crt").getFile(),
+                this.getClass().getResource("saml-private-key.pk8").getFile())
+            .withAdditionalSPKey(
+                this.getClass().getResource("saml-alt-public-key.crt").getFile(),
+                this.getClass().getResource("saml-alt-private-key.pk8").getFile())
+            .build();
+
+    String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
+    System.out.println(metadataXml);
+  }
+
   private SamlClient getKeyCloakClient(boolean signingNewDocument)
       throws IOException, SamlException {
     SamlClient client =
         SamlClient.fromMetadata(
-            "myidentifier",
-            "http://some/url",
-            getXml("keycloak.xml"),
-            SamlClient.SamlIdpBinding.POST);
+            "myidentifier", "http://some/url", getXml("keycloak.xml"), SamlClient.SamlBinding.POST);
     if (signingNewDocument) {
       client.setSPKeys(
           this.getClass().getResource("saml-public-key.crt").getFile(),

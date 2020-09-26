@@ -188,7 +188,7 @@ public class MetadataSettings {
      * @param spEntityId field to set
      * @return builder
      */
-    public Builder withSpEntityId(@Nonnull String spEntityId) {
+    public Builder spEntityId(@Nonnull String spEntityId) {
       this.spEntityId = spEntityId;
       return this;
     }
@@ -199,8 +199,7 @@ public class MetadataSettings {
      * @param spAssertionConsumerServiceUrl field to set
      * @return builder
      */
-    public Builder withSpAssertionConsumerServiceUrl(
-        @Nonnull String spAssertionConsumerServiceUrl) {
+    public Builder spAssertionConsumerServiceUrl(@Nonnull String spAssertionConsumerServiceUrl) {
       this.spAssertionConsumerServiceUrl = spAssertionConsumerServiceUrl;
       return this;
     }
@@ -211,7 +210,7 @@ public class MetadataSettings {
      * @param spAssertionConsumerServiceBinding field to set
      * @return builder
      */
-    public Builder withSpAssertionConsumerServiceBinding(
+    public Builder spAssertionConsumerServiceBinding(
         @Nonnull SamlBinding spAssertionConsumerServiceBinding) {
       this.spAssertionConsumerServiceBinding = spAssertionConsumerServiceBinding;
       return this;
@@ -223,7 +222,7 @@ public class MetadataSettings {
      * @param spSingleLogoutServiceUrl field to set
      * @return builder
      */
-    public Builder withSpSingleLogoutServiceUrl(@Nonnull String spSingleLogoutServiceUrl) {
+    public Builder spSingleLogoutServiceUrl(@Nonnull String spSingleLogoutServiceUrl) {
       this.spSingleLogoutServiceUrl = spSingleLogoutServiceUrl;
       return this;
     }
@@ -234,8 +233,7 @@ public class MetadataSettings {
      * @param spSingleLogoutServiceBinding field to set
      * @return builder
      */
-    public Builder withSpSingleLogoutServiceBinding(
-        @Nonnull SamlBinding spSingleLogoutServiceBinding) {
+    public Builder spSingleLogoutServiceBinding(@Nonnull SamlBinding spSingleLogoutServiceBinding) {
       this.spSingleLogoutServiceBinding = spSingleLogoutServiceBinding;
       return this;
     }
@@ -246,7 +244,7 @@ public class MetadataSettings {
      * @param spNameIDFormat field to set
      * @return builder
      */
-    public Builder withSpNameIDFormat(@Nonnull String spNameIDFormat) {
+    public Builder spNameIDFormat(@Nonnull String spNameIDFormat) {
       this.spNameIDFormat = spNameIDFormat;
       return this;
     }
@@ -257,7 +255,7 @@ public class MetadataSettings {
      * @param nameIdEncrypted field to set
      * @return builder
      */
-    public Builder withNameIdEncrypted(@Nonnull boolean nameIdEncrypted) {
+    public Builder nameIdEncrypted(@Nonnull boolean nameIdEncrypted) {
       this.nameIdEncrypted = nameIdEncrypted;
       return this;
     }
@@ -268,7 +266,7 @@ public class MetadataSettings {
      * @param authnRequestsSigned field to set
      * @return builder
      */
-    public Builder withAuthnRequestsSigned(@Nonnull boolean authnRequestsSigned) {
+    public Builder authnRequestsSigned(@Nonnull boolean authnRequestsSigned) {
       this.authnRequestsSigned = authnRequestsSigned;
       return this;
     }
@@ -279,7 +277,7 @@ public class MetadataSettings {
      * @param logoutRequestSigned field to set
      * @return builder
      */
-    public Builder withLogoutRequestSigned(@Nonnull boolean logoutRequestSigned) {
+    public Builder logoutRequestSigned(@Nonnull boolean logoutRequestSigned) {
       this.logoutRequestSigned = logoutRequestSigned;
       return this;
     }
@@ -290,7 +288,7 @@ public class MetadataSettings {
      * @param logoutResponseSigned field to set
      * @return builder
      */
-    public Builder withLogoutResponseSigned(@Nonnull boolean logoutResponseSigned) {
+    public Builder logoutResponseSigned(@Nonnull boolean logoutResponseSigned) {
       this.logoutResponseSigned = logoutResponseSigned;
       return this;
     }
@@ -301,7 +299,7 @@ public class MetadataSettings {
      * @param wantMessagesSigned field to set
      * @return builder
      */
-    public Builder withWantMessagesSigned(@Nonnull boolean wantMessagesSigned) {
+    public Builder wantMessagesSigned(@Nonnull boolean wantMessagesSigned) {
       this.wantMessagesSigned = wantMessagesSigned;
       return this;
     }
@@ -312,7 +310,7 @@ public class MetadataSettings {
      * @param wantAssertionsSigned field to set
      * @return builder
      */
-    public Builder withWantAssertionsSigned(@Nonnull boolean wantAssertionsSigned) {
+    public Builder wantAssertionsSigned(@Nonnull boolean wantAssertionsSigned) {
       this.wantAssertionsSigned = wantAssertionsSigned;
       return this;
     }
@@ -323,7 +321,7 @@ public class MetadataSettings {
      * @param wantAssertionsEncrypted field to set
      * @return builder
      */
-    public Builder withWantAssertionsEncrypted(@Nonnull boolean wantAssertionsEncrypted) {
+    public Builder wantAssertionsEncrypted(@Nonnull boolean wantAssertionsEncrypted) {
       this.wantAssertionsEncrypted = wantAssertionsEncrypted;
       return this;
     }
@@ -334,7 +332,7 @@ public class MetadataSettings {
      * @param wantNameId field to set
      * @return builder
      */
-    public Builder withWantNameId(@Nonnull boolean wantNameId) {
+    public Builder wantNameId(@Nonnull boolean wantNameId) {
       this.wantNameId = wantNameId;
       return this;
     }
@@ -345,7 +343,7 @@ public class MetadataSettings {
      * @param wantNameIdEncrypted field to set
      * @return builder
      */
-    public Builder withWantNameIdEncrypted(@Nonnull boolean wantNameIdEncrypted) {
+    public Builder wantNameIdEncrypted(@Nonnull boolean wantNameIdEncrypted) {
       this.wantNameIdEncrypted = wantNameIdEncrypted;
       return this;
     }
@@ -356,7 +354,7 @@ public class MetadataSettings {
      * @param signMetadata field to set
      * @return builder
      */
-    public Builder withSignMetadata(@Nonnull boolean signMetadata) {
+    public Builder signMetadata(@Nonnull boolean signMetadata) {
       this.signMetadata = signMetadata;
       return this;
     }
@@ -367,7 +365,7 @@ public class MetadataSettings {
      * @param requestedAuthnContext field to set
      * @return builder
      */
-    public Builder withRequestedAuthnContext(@Nonnull List<String> requestedAuthnContext) {
+    public Builder requestedAuthnContext(@Nonnull List<String> requestedAuthnContext) {
       this.requestedAuthnContext = requestedAuthnContext;
       return this;
     }
@@ -378,7 +376,7 @@ public class MetadataSettings {
      * @param requestedAuthnContextComparison field to set
      * @return builder
      */
-    public Builder withRequestedAuthnContextComparison(
+    public Builder requestedAuthnContextComparison(
         @Nonnull String requestedAuthnContextComparison) {
       this.requestedAuthnContextComparison = requestedAuthnContextComparison;
       return this;
@@ -390,7 +388,7 @@ public class MetadataSettings {
      * @param wantXMLValidation field to set
      * @return builder
      */
-    public Builder withWantXMLValidation(@Nonnull boolean wantXMLValidation) {
+    public Builder wantXMLValidation(@Nonnull boolean wantXMLValidation) {
       this.wantXMLValidation = wantXMLValidation;
       return this;
     }
@@ -401,7 +399,7 @@ public class MetadataSettings {
      * @param signatureAlgorithm field to set
      * @return builder
      */
-    public Builder withSignatureAlgorithm(@Nonnull String signatureAlgorithm) {
+    public Builder signatureAlgorithm(@Nonnull String signatureAlgorithm) {
       this.signatureAlgorithm = signatureAlgorithm;
       return this;
     }
@@ -412,7 +410,7 @@ public class MetadataSettings {
      * @param digestAlgorithm field to set
      * @return builder
      */
-    public Builder withDigestAlgorithm(@Nonnull String digestAlgorithm) {
+    public Builder digestAlgorithm(@Nonnull String digestAlgorithm) {
       this.digestAlgorithm = digestAlgorithm;
       return this;
     }
@@ -423,7 +421,7 @@ public class MetadataSettings {
      * @param rejectUnsolicitedResponsesWithInResponseTo field to set
      * @return builder
      */
-    public Builder withRejectUnsolicitedResponsesWithInResponseTo(
+    public Builder rejectUnsolicitedResponsesWithInResponseTo(
         @Nonnull boolean rejectUnsolicitedResponsesWithInResponseTo) {
       this.rejectUnsolicitedResponsesWithInResponseTo = rejectUnsolicitedResponsesWithInResponseTo;
       return this;
@@ -435,7 +433,7 @@ public class MetadataSettings {
      * @param uniqueIDPrefix field to set
      * @return builder
      */
-    public Builder withUniqueIDPrefix(@Nonnull String uniqueIDPrefix) {
+    public Builder uniqueIDPrefix(@Nonnull String uniqueIDPrefix) {
       this.uniqueIDPrefix = uniqueIDPrefix;
       return this;
     }
@@ -446,7 +444,7 @@ public class MetadataSettings {
      * @param compressRequest field to set
      * @return builder
      */
-    public Builder withCompressRequest(@Nonnull boolean compressRequest) {
+    public Builder compressRequest(@Nonnull boolean compressRequest) {
       this.compressRequest = compressRequest;
       return this;
     }
@@ -457,7 +455,7 @@ public class MetadataSettings {
      * @param compressResponse field to set
      * @return builder
      */
-    public Builder withCompressResponse(@Nonnull boolean compressResponse) {
+    public Builder compressResponse(@Nonnull boolean compressResponse) {
       this.compressResponse = compressResponse;
       return this;
     }
@@ -468,7 +466,7 @@ public class MetadataSettings {
      * @param spValidationOnly field to set
      * @return builder
      */
-    public Builder withSpValidationOnly(@Nonnull boolean spValidationOnly) {
+    public Builder spValidationOnly(@Nonnull boolean spValidationOnly) {
       this.spValidationOnly = spValidationOnly;
       return this;
     }
@@ -481,7 +479,7 @@ public class MetadataSettings {
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder withSPKeys(String publicKey, String privateKey) throws SamlException {
+    public Builder spKeys(String publicKey, String privateKey) throws SamlException {
       this.spCredential = generateBasicX509Credential(publicKey, privateKey);
       return this;
     }
@@ -494,8 +492,7 @@ public class MetadataSettings {
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder withSPKeys(X509Certificate certificate, PrivateKey privateKey)
-        throws SamlException {
+    public Builder spKeys(X509Certificate certificate, PrivateKey privateKey) throws SamlException {
       if (certificate == null || privateKey == null) {
         throw new SamlException("No credentials provided");
       }
@@ -511,7 +508,7 @@ public class MetadataSettings {
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder withAdditionalSPKey(String publicKey, String privateKey) throws SamlException {
+    public Builder additionalSPKey(String publicKey, String privateKey) throws SamlException {
       additionalSpCredentials.add(generateBasicX509Credential(publicKey, privateKey));
       return this;
     }
@@ -524,7 +521,7 @@ public class MetadataSettings {
      * @throws SamlException if publicKey and privateKey don't form a valid credential
      * @return builder
      */
-    public Builder withAdditionalSPKey(X509Certificate certificate, PrivateKey privateKey)
+    public Builder additionalSPKey(X509Certificate certificate, PrivateKey privateKey)
         throws SamlException {
       additionalSpCredentials.add(new BasicX509Credential(certificate, privateKey));
       return this;

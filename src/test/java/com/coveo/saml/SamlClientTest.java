@@ -503,9 +503,9 @@ public class SamlClientTest {
 
     MetadataSettings metadataSettings =
         MetadataSettings.builder()
-            .withSpEntityId("testsp-entity-id")
-            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
-            .withSpSingleLogoutServiceUrl("http://example.com/logout")
+            .spEntityId("testsp-entity-id")
+            .spAssertionConsumerServiceUrl("http://exampe.com/login")
+            .spSingleLogoutServiceUrl("http://example.com/logout")
             .build();
     String metadataXml = SamlClient.generateSpMetadata(metadataSettings);
   }
@@ -515,12 +515,12 @@ public class SamlClientTest {
 
     MetadataSettings metadataSettings =
         MetadataSettings.builder()
-            .withSpEntityId("testsp-entity-id")
-            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
-            .withSpSingleLogoutServiceUrl("http://example.com/logout")
-            .withAuthnRequestsSigned(false)
-            .withWantAssertionsEncrypted(true)
-            .withSPKeys(
+            .spEntityId("testsp-entity-id")
+            .spAssertionConsumerServiceUrl("http://exampe.com/login")
+            .spSingleLogoutServiceUrl("http://example.com/logout")
+            .authnRequestsSigned(false)
+            .wantAssertionsEncrypted(true)
+            .spKeys(
                 this.getClass().getResource("saml-public-key.crt").getFile(),
                 this.getClass().getResource("saml-private-key.pk8").getFile())
             .build();
@@ -533,15 +533,15 @@ public class SamlClientTest {
 
     MetadataSettings metadataSettings =
         MetadataSettings.builder()
-            .withSpEntityId("testsp-entity-id")
-            .withSpAssertionConsumerServiceUrl("http://exampe.com/login")
-            .withSpSingleLogoutServiceUrl("http://example.com/logout")
-            .withAuthnRequestsSigned(false)
-            .withWantAssertionsEncrypted(true)
-            .withSPKeys(
+            .spEntityId("testsp-entity-id")
+            .spAssertionConsumerServiceUrl("http://exampe.com/login")
+            .spSingleLogoutServiceUrl("http://example.com/logout")
+            .authnRequestsSigned(false)
+            .wantAssertionsEncrypted(true)
+            .spKeys(
                 this.getClass().getResource("saml-public-key.crt").getFile(),
                 this.getClass().getResource("saml-private-key.pk8").getFile())
-            .withAdditionalSPKey(
+            .additionalSPKey(
                 this.getClass().getResource("saml-alt-public-key.crt").getFile(),
                 this.getClass().getResource("saml-alt-private-key.pk8").getFile())
             .build();
